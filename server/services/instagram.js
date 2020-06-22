@@ -17,7 +17,7 @@ module.exports = async function (fastify, opts) {
   })
 
   fastify.get('/login-ui', (req, reply) => {
-    reply.view('/templates/index.art', { url: process.env.SELF_ADRESS })
+    reply.view('/templates/index.art', { url: process.env.SELF_REAL_ADRESS })
   })
 
   fastify.get('/login-ig', { websocket: true }, (conn, req) => {

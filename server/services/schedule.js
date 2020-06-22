@@ -22,7 +22,7 @@ module.exports = async function (fastify, opts) {
   })
 
   fastify.get('/init', async function (req, reply) {
-    await got.agendarest.delete('send-photo')
+    await got.agendarest.delete('send-photo').catch(res => null)
     await got.agendarest.post('', {
       json: {
         name: 'send-photo',
