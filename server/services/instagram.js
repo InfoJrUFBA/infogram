@@ -16,13 +16,11 @@ module.exports = async function (fastify, opts) {
     return { sucess: 'ok' }
   })
 
-  fastify.route({
-    method: 'GET',
-    url: '/login-ig',
-    handler: (req, reply) => {
-      reply.sendFile('index.html')
-    },
-    wsHandler: (conn, req) => {
+  fastify.get('/login-ui', (req, reply) => {
+    reply.view('/templates/index.art', { url: process.env.SELF_ADRESS })
+  })
+
+  fastify.get('/login-ig', { websocket: true }, (conn, req) => {
       function makeWsPromise (type) {
         return new Promise((resolve, reject) => {
           conn.socket.on('message', rawMessage => {
@@ -52,7 +50,6 @@ module.exports = async function (fastify, opts) {
             sendMessage('error', 'Could not resolve checkpoint', { err: e, stack: e.stack })
           })
       })
-    }
   })
 }
 // { "type": "init" }
