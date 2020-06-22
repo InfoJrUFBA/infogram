@@ -1,7 +1,8 @@
 'use strict'
 
 module.exports = async function (fastify, opts) {
-  fastify.get('/', async function(req, reply) {
+  fastify.post('/pipefy-hooks', async function (req, reply) {
+    console.log(req.body)
     return { root: true }
   })
 }

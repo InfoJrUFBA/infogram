@@ -11,7 +11,7 @@ module.exports = async function (fastify, opts) {
     const photo = await got.photoDownloader(photoUrl)
     await ig.api.publish.photo({
       file: photo,
-      caption: description.replace(/(?:\r\n|\r|\n)/g, "\u2063\n")
+      caption: description.replace(/(?:\r\n|\r|\n)/g, '\u2063\n')
     })
     return { sucess: 'ok' }
   })
