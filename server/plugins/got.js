@@ -28,6 +28,12 @@ module.exports.autoConfig = {
     photoDownloader: {
       responseType: 'buffer',
       resolveBodyOnly: true
-    }
+    },
+    agendarest: {
+      prefixUrl: process.env.AGENDA_API,
+      responseType: 'text',
+      resolveBodyOnly: true
+    },
+    none: {}
   }
 }
