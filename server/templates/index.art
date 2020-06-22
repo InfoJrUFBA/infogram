@@ -10,9 +10,12 @@
     <div id="app">
       <button>Logar</button>
     </div>
+    <input style="display: none;" id="url" value="{{ url }}" />
   </body>
   <script>
-    const socket = new WebSocket("ws://localhost:3000/login-ig");
+    const rawUrl = document.querySelector("#url").value
+    const url = new URL(rawUrl)
+    const socket = new WebSocket(`ws://${url.host}/login-ig`);
 
     socket.onopen = function (e) {
       console.log("[open] Connection established");

@@ -17,6 +17,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "art-template": "^4.13.2",
     "date-fns": "^2.14.0",
     "fastify": "^2.0.0",
     "fastify-autoload": "^1.0.0",
@@ -25,11 +26,11 @@
     "fastify-helmet": "^3.0.2",
     "fastify-oas": "^2.7.0",
     "fastify-plugin": "^1.5.0",
-    "fastify-static": "^2.7.0",
     "fastify-websocket": "^1.1.2",
     "fs-extra": "^9.0.1",
     "got": "^11.3.0",
-    "instagram-private-api": "^1.40.1"
+    "instagram-private-api": "^1.40.1",
+    "point-of-view": "^3.8.0"
   },
   "devDependencies": {
     "standard": "^14.3.4",

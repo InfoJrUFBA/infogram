@@ -2,20 +2,23 @@
 
 const fp = require('fastify-plugin')
 const { IgApiClient } = require('instagram-private-api')
-const { readJson, writeJson } = require('fs-extra')
+const { readJson, writeJson, ensureDir } = require('fs-extra')
+const { join } = require('path')
 
-module.exports = fp(async function (fastify, opts) {
-  const { userName, password } = opts
+module.exports = fp(async function (fastify, {userName, password}) {
   const ig = new IgApiClient()
   ig.state.generateDevice(userName)
+
+  await ensureDir('ig-cache')
+  const fileName = join('ig-cache', `${userName}.json`)
 
   ig.request.end$.subscribe(async () => {
     const serialized = await ig.state.serialize()
     delete serialized.constants // this deletes the version info, so you'll always use the version provided by the library
-    writeJson(`${userName}-ig-cache.json`, serialized)
+    writeJson(fileName, serialized)
   })
 
-  const [data, error] = await goWay(() => readJson(`${userName}-ig-cache.json`))
+  const [data, error] = await goWay(() => readJson(fileName))
 
   if (error === null) {
     await ig.state.deserialize(data)

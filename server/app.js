@@ -8,8 +8,10 @@ module.exports = function (fastify, opts, next) {
     .register(require('fastify-cors'))
     .register(require('fastify-helmet'))
     .register(require('fastify-websocket'))
-    .register(require('fastify-static'), {
-      root: path.join(__dirname, 'public')
+    .register(require('point-of-view'), {
+      engine: {
+        'art-template': require('art-template')
+      }
     })
     .register(require('fastify-oas'), {
       routePrefix: '/documentation',
