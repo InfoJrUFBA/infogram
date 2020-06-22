@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login Screen</title>
+  </head>
+  <body>
+    <h1>Tela para Logar</h1>
+    <div id="app">
+      <button>Logar</button>
+    </div>
+  </body>
+  <script>
+    const socket = new WebSocket("ws://localhost:3000/login-ig");
+
+    socket.onopen = function (e) {
+      console.log("[open] Connection established");
+    };
+
+    socket.onclose = function (event) {
+      if (event.wasClean) {
+        console.log(
+          `[close] Connection closed cleanly, code=${event.code} reason=${event.reason}`
+        );
+      } else {
+        console.log("[close] Connection died");
+      }
+    };
+
+    const events = [];
+
+    function on(cb) {
+      events.push(cb);
+    }
+
+    socket.onmessage = function ({ data }) {
+      for (; events.length !== 0; ) {
+        event = events.pop();
+        event(data);
+      }
+    };
+
+    socket.onerror = function (error) {
+      console.log(`[error] ${error.message}`);
+    };
+
+    function makeWsPromise(type) {
+      return new Promise((resolve, reject) => {
+        on((rawMessage) => {
+          const message = JSON.parse(rawMessage);
+          if (message.type === type) resolve(message);
+        });
+      });
+    }
+
+    function sendMessage(type, message = "", detail = "nenhum") {
+      socket.send(JSON.stringify({ type, message, detail }));
+    }
+
+    const app = document.querySelector("#app");
+    document.querySelector("button").addEventListener("click", async (e) => {
+      sendMessage("init");
+      makeWsPromise("response").then(() => {
+        const child = document.createElement("div");
+        child.innerText = "Logado com sucesso fera";
+        app.appendChild(child);
+      });
+      makeWsPromise("error").then((res) => {
+        const child = document.createElement("div");
+        child.innerText = "Precisamos do token, veja no email se recebeu ele";
+        app.appendChild(child);
+        const inputChild = document.createElement("input");
+        inputChild.type = "text";
+        app.appendChild(child);
+        const button = document.createElement("button");
+        button.innerText = "Enviar Codigo";
+        button.addEventListener("click", (e) => {
+          sendMessage("code", inputChild.value);
+        });
+        makeWsPromise("error").then((res) => {
+          const child = document.createElement("div");
+          child.innerText = "Deu B.O";
+          app.appendChild(child);
+        });
+      });
+    });
+  </script>
+</html>
