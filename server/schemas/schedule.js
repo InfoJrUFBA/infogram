@@ -1,4 +1,5 @@
 const create = {
+  description: 'Cria um schedule para enviar a foto',
   body: {
     type: 'object',
     properties: {
@@ -6,7 +7,27 @@ const create = {
       photoUrl: { type: 'string' },
       description: { type: 'string' }
     }
+  },
+  response: {
+    200: {
+      type: 'object',
+      properties: {
+        sucess: { type: 'boolean' }
+      }
+    }
   }
 }
 
-module.exports = { create }
+const init = {
+  description: 'cria o job para o schedule (interno)',
+  response: {
+    200: {
+      type: 'object',
+      properties: {
+        sucess: { type: 'boolean' }
+      }
+    }
+  }
+}
+
+module.exports = { create, init }

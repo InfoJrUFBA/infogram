@@ -20,11 +20,6 @@ module.exports = fp(async function (fastify, opts) {
 
 module.exports.autoConfig = {
   clients: {
-    pokeapi: {
-      prefixUrl: 'https://pokeapi.co/api/v2',
-      responseType: 'json',
-      resolveBodyOnly: true
-    },
     photoDownloader: {
       responseType: 'buffer',
       resolveBodyOnly: true
@@ -34,6 +29,14 @@ module.exports.autoConfig = {
       responseType: 'text',
       resolveBodyOnly: true
     },
-    none: {}
+    none: {},
+    pipefy: {
+      prefixUrl: 'https://app.pipefy.com/queries',
+      headers: {
+        authorization: `Bearer ${process.env.PIPEFY_KEY}`
+      },
+      responseType: 'json',
+      resolveBodyOnly: true
+    }
   }
 }

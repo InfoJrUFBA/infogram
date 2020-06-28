@@ -5,7 +5,7 @@ const { IgApiClient } = require('instagram-private-api')
 const { readJson, writeJson, ensureDir } = require('fs-extra')
 const { join } = require('path')
 
-module.exports = fp(async function (fastify, {userName, password}) {
+module.exports = fp(async function (fastify, { userName, password }) {
   const ig = new IgApiClient()
   ig.state.generateDevice(userName)
 
