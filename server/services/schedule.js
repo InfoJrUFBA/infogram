@@ -1,6 +1,6 @@
 'use strict'
 
-const { create } = require("../schemas/schedule")
+const { create, init } = require('../schemas/schedule')
 
 module.exports = async function (fastify, opts) {
   const { got } = fastify
@@ -21,7 +21,7 @@ module.exports = async function (fastify, opts) {
     return { sucess: true }
   })
 
-  fastify.get('/init', async function (req, reply) {
+  fastify.get('/init', { schema: init }, async function (req, reply) {
     await got.agendarest.delete('send-photo').catch(res => null)
     await got.agendarest.post('', {
       json: {

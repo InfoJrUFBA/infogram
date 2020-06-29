@@ -16,40 +16,40 @@ module.exports = async function (fastify, opts) {
     return { sucess: 'ok' }
   })
 
-  fastify.get('/login-ui', (req, reply) => {
+  fastify.get('/login-ui', { schema: { hide: true } }, (req, reply) => {
     reply.view('/templates/index.art', { url: process.env.SELF_ADRESS })
   })
 
-  fastify.get('/login-ig', { websocket: true }, (conn, req) => {
-      function makeWsPromise (type) {
-        return new Promise((resolve, reject) => {
-          conn.socket.on('message', rawMessage => {
-            const message = JSON.parse(rawMessage)
-            if (message.type === type) { resolve(message) }
-          })
+  fastify.get('/login-ig', { websocket: true, schema: { hide: true } }, (conn, req) => {
+    function makeWsPromise (type) {
+      return new Promise((resolve, reject) => {
+        conn.socket.on('message', rawMessage => {
+          const message = JSON.parse(rawMessage)
+          if (message.type === type) { resolve(message) }
         })
-      }
-
-      function sendMessage (type, message, detail = 'nenhum') {
-        conn.socket.send(JSON.stringify({ type, message, detail }))
-      }
-
-      makeWsPromise('init').then(async res => {
-        ig.login()
-          .then(() => sendMessage('response', 'sucess'))
-          .catch(async (e) => {
-            if (e instanceof IgCheckpointError) {
-              sendMessage('error', 'checkpoint err, need code', { err: e, stack: e.stack })
-              await ig.api.challenge.auto(true) // Requesting sms-code or click "It was me" button
-              const { message } = await makeWsPromise('code')
-              await ig.api.challenge.sendSecurityCode(message)
-              sendMessage('response', 'sucess')
-            }
-          })
-          .catch((e) => {
-            sendMessage('error', 'Could not resolve checkpoint', { err: e, stack: e.stack })
-          })
       })
+    }
+
+    function sendMessage (type, message, detail = 'nenhum') {
+      conn.socket.send(JSON.stringify({ type, message, detail }))
+    }
+
+    makeWsPromise('init').then(async res => {
+      ig.login()
+        .then(() => sendMessage('response', 'sucess'))
+        .catch(async (e) => {
+          if (e instanceof IgCheckpointError) {
+            sendMessage('error', 'checkpoint err, need code', { err: e, stack: e.stack })
+            await ig.api.challenge.auto(true) // Requesting sms-code or click "It was me" button
+            const { message } = await makeWsPromise('code')
+            await ig.api.challenge.sendSecurityCode(message)
+            sendMessage('response', 'sucess')
+          }
+        })
+        .catch((e) => {
+          sendMessage('error', 'Could not resolve checkpoint', { err: e, stack: e.stack })
+        })
+    })
   })
 }
 // { "type": "init" }

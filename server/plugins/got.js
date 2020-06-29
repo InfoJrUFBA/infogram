@@ -20,20 +20,26 @@ module.exports = fp(async function (fastify, opts) {
 
 module.exports.autoConfig = {
   clients: {
-    pokeapi: {
-      prefixUrl: 'https://pokeapi.co/api/v2',
-      responseType: 'json',
-      resolveBodyOnly: true
-    },
     photoDownloader: {
       responseType: 'buffer',
-      resolveBodyOnly: true
+      resolveBodyOnly: true,
+      headers: {
+        cookie: `id_token=${process.env.PIPEFY_COOKIE}`
+      },
     },
     agendarest: {
       prefixUrl: process.env.AGENDA_API,
       responseType: 'text',
       resolveBodyOnly: true
     },
-    none: {}
+    none: {},
+    pipefy: {
+      prefixUrl: 'https://app.pipefy.com/queries',
+      headers: {
+        authorization: `Bearer ${process.env.PIPEFY_KEY}`
+      },
+      responseType: 'json',
+      resolveBodyOnly: true
+    }
   }
 }
