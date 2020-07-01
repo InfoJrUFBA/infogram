@@ -62,25 +62,30 @@
     }
 
     const app = document.querySelector("#app");
+    function awaitSucess() {
+        makeWsPromise("response").then(() => {
+          const child = document.createElement("div");
+          child.innerText = "Logado com sucesso fera";
+          app.appendChild(child);
+        });
+    }
     document.querySelector("button").addEventListener("click", async (e) => {
       sendMessage("init");
-      makeWsPromise("response").then(() => {
-        const child = document.createElement("div");
-        child.innerText = "Logado com sucesso fera";
-        app.appendChild(child);
-      });
+      awaitSucess()
       makeWsPromise("error").then((res) => {
         const child = document.createElement("div");
         child.innerText = "Precisamos do token, veja no email se recebeu ele";
-        app.appendChild(child);
+
         const inputChild = document.createElement("input");
         inputChild.type = "text";
-        app.appendChild(child);
+
         const button = document.createElement("button");
         button.innerText = "Enviar Codigo";
         button.addEventListener("click", (e) => {
           sendMessage("code", inputChild.value);
         });
+        [child, inputChild, button].forEach(e => app.appendChild(e))
+        awaitSucess()
         makeWsPromise("error").then((res) => {
           const child = document.createElement("div");
           child.innerText = "Deu B.O";

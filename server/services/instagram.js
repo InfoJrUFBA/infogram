@@ -38,6 +38,7 @@ module.exports = async function (fastify, opts) {
       ig.login()
         .then(() => sendMessage('response', 'sucess'))
         .catch(async (e) => {
+          console.log(e)
           if (e instanceof IgCheckpointError) {
             sendMessage('error', 'checkpoint err, need code', { err: e, stack: e.stack })
             await ig.api.challenge.auto(true) // Requesting sms-code or click "It was me" button
