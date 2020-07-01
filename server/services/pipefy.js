@@ -54,7 +54,7 @@ module.exports = async function (fastify, opts) {
 
     const publicationDateField = card.fields.find(e => e.field.id === 'data_e_hora_de_publica_o')
     const imagemField = card.fields.find(e => e.field.id === 'imagem')
-    const descriptionField = card.fields.find(e => e.field.id === 'descri_o_1')
+    const descriptionField = card.fields.find(e => e.field.id === 'descri_o_da_foto')
 
     const url = new URL(JSON.parse(imagemField.value)[0])
     const imagePath = url.pathname.split('/').slice(-2).join('/')
