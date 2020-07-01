@@ -53,16 +53,13 @@ module.exports = async function (fastify, opts) {
     })
 
     const publicationDateField = card.fields.find(e => e.field.id === 'data_e_hora_de_publica_o')
-    const imagemField = card.fields.find(e => e.field.id === 'imagem')
-    const descriptionField = card.fields.find(e => e.field.id === 'descri_o_1')
+    const imagemField = card.fields.find(e => e.field.id === 'url_da_imagem')
+    const descriptionField = card.fields.find(e => e.field.id === 'descri_o_da_foto')
 
-    const url = new URL(JSON.parse(imagemField.value)[0])
-    const imagePath = url.pathname.split('/').slice(-2).join('/')
-
+    const photoUrl = imagemField.value
     const description = descriptionField.value
     const parsedDate = parse(publicationDateField.value, 'dd/MM/yyyy HH:mm', new Date())
     const zonedDate = zonedTimeToUtc(parsedDate, 'America/Sao_Paulo')
-
 
     await got.agendarest.post('once', {
       json: {
@@ -70,7 +67,7 @@ module.exports = async function (fastify, opts) {
         interval: formatISO(zonedDate),
         data: {
           body: {
-            photoUrl: `https://app-storage-service.pipefy.com/v1/resources/cards-v1/45818252/uploads/${imagePath}`,
+            photoUrl,
             description,
             cardId
           }
