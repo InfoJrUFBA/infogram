@@ -8,7 +8,8 @@ module.exports = async function (fastify, opts) {
 
   fastify.post('/send-photo', { schema: sendPhoto }, async function ({ body }, reply) {
     const { photoUrl, description } = body
-    const photo = await got.photoDownloader(photoUrl)
+    const photo = await got.photoDownloader(photoUrl).catch(e => console.log('coe', e))
+    console.log('photo', photo)
     await ig.api.publish.photo({
       file: photo,
       caption: description.replace(/(?:\r\n|\r|\n)/g, '\u2063\n')
