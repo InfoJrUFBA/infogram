@@ -1,12 +1,13 @@
 
-const sendPhoto = {
+const sendPhotoFromPipefy = {
   description: 'Envia uma foto para o instagram',
   body: {
     type: 'object',
-    required: ['photoUrl', 'description'],
+    required: ['photoUrl', 'description', 'cardId'],
     properties: {
       photoUrl: { type: 'string' },
-      description: { type: 'string' }
+      description: { type: 'string' },
+      cardId: { type: ['string', 'number'] }
     }
   },
   response: {
@@ -19,4 +20,4 @@ const sendPhoto = {
   }
 }
 
-module.exports = { sendPhoto }
+module.exports = { sendPhotoFromPipefy }

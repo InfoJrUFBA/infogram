@@ -23,9 +23,6 @@ module.exports.autoConfig = {
     photoDownloader: {
       responseType: 'buffer',
       resolveBodyOnly: true,
-      headers: {
-        cookie: `id_token=${process.env.PIPEFY_COOKIE}`
-      },
     },
     agendarest: {
       prefixUrl: process.env.AGENDA_API,

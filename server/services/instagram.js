@@ -1,17 +1,35 @@
 'use strict'
 
 const { IgCheckpointError } = require('instagram-private-api')
-const { sendPhoto } = require('../schemas/photo')
+const { sendPhotoFromPipefy } = require('../schemas/photo')
+const { pipefyPhotoDownloader } = require('../utils/pipefy-photo')
 
 module.exports = async function (fastify, opts) {
-  const { got, ig } = fastify
+  const { ig } = fastify
 
-  fastify.post('/send-photo', { schema: sendPhoto }, async function ({ body }, reply) {
-    const { photoUrl, description } = body
-    const photo = await got.photoDownloader(photoUrl)
+  fastify.post('/send-photo-from-pipefy', { schema: sendPhotoFromPipefy }, async function ({ body }, reply) {
+    const { photoUrl, description, cardId } = body
+    const photo = await pipefyPhotoDownloader(photoUrl)
     await ig.api.publish.photo({
       file: photo,
       caption: description.replace(/(?:\r\n|\r|\n)/g, '\u2063\n')
+    })
+    await got.pipefy.post('', {
+      json: {
+        query: `
+          mutation {
+            moveCardToPhase(input: {
+              card_id: ${cardId}
+              destination_phase_id: 4573195
+            }) {
+              card {
+                id
+                title
+              }
+            }
+          }
+        `
+      }
     })
     return { sucess: 'ok' }
   })
