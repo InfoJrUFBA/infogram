@@ -26,7 +26,7 @@ module.exports = async function (fastify, opts) {
     await got.agendarest.post('', {
       json: {
         name: 'send-photo',
-        url: `${process.env.SELF_ADRESS}/send-photo`
+        url: `${process.env.SELF_ADRESS}/send-photo-from-pipefy`
       }
     })
     return { sucess: true }

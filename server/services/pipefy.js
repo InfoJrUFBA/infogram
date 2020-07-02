@@ -3,8 +3,8 @@
 const { cardUpdate } = require('../schemas/pipefy')
 const parse = require('date-fns/parse')
 const formatISO = require('date-fns/formatISO')
-const { zonedTimeToUtc  } = require('date-fns-tz')
-const { URL } = require('url');
+const { zonedTimeToUtc } = require('date-fns-tz')
+const { URL } = require('url')
 
 module.exports = async function (fastify, opts) {
   const { got } = fastify
@@ -16,15 +16,15 @@ module.exports = async function (fastify, opts) {
 
     await got.agendarest.post('cancel', {
       json: {
-        "data.body.cardID": String(cardId)
+        'data.body.cardId': Number(cardId)
       }
     })
 
-    if(data.new_value !== 'SIM') return { canceled: true }
+    if (data.new_value !== 'SIM') return { canceled: true }
 
-    const { data: { card }} = await got.pipefy.post('', {
-        json: {
-            query: `
+    const { data: { card } } = await got.pipefy.post('', {
+      json: {
+        query: `
                 {
                   card(id: ${cardId}) {
                     due_date
@@ -49,7 +49,7 @@ module.exports = async function (fastify, opts) {
                   }
                 }
             `
-        }
+      }
     })
 
     const publicationDateField = card.fields.find(e => e.field.id === 'data_e_hora_de_publica_o')
@@ -62,7 +62,6 @@ module.exports = async function (fastify, opts) {
     const description = descriptionField.value
     const parsedDate = parse(publicationDateField.value, 'dd/MM/yyyy HH:mm', new Date())
     const zonedDate = zonedTimeToUtc(parsedDate, 'America/Sao_Paulo')
-
 
     await got.agendarest.post('once', {
       json: {
