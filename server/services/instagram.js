@@ -14,7 +14,7 @@ module.exports = async function (fastify, opts) {
       file: photo,
       caption: description.replace(/(?:\r\n|\r|\n)/g, '\u2063\n')
     })
-    await got.pipefy.post('', {
+    got.pipefy.post('', {
       json: {
         query: `
           mutation {
