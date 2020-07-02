@@ -5,7 +5,7 @@ const { sendPhotoFromPipefy } = require('../schemas/photo')
 const { pipefyPhotoDownloader } = require('../utils/pipefy-photo')
 
 module.exports = async function (fastify, opts) {
-  const { ig } = fastify
+  const { got, ig } = fastify
 
   fastify.post('/send-photo-from-pipefy', { schema: sendPhotoFromPipefy }, async function ({ body }, reply) {
     const { photoUrl, description, cardId } = body
