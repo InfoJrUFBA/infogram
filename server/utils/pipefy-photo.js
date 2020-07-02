@@ -2,7 +2,7 @@ const { CookieJar } = require('tough-cookie')
 const cheerio = require('cheerio')
 const got = require('got')
 
-export async function pipefyPhotoDownloader (imageUrl) {
+async function pipefyPhotoDownloader (imageUrl) {
   try {
     const cookieJar = new CookieJar()
     const loginCredential = await got.post('https://auth.pipefy.com/co/authenticate', {
@@ -54,3 +54,5 @@ export async function pipefyPhotoDownloader (imageUrl) {
     console.error(e)
   }
 }
+
+module.exports = { pipefyPhotoDownloader }
