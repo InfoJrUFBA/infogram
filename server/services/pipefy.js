@@ -16,7 +16,7 @@ module.exports = async function (fastify, opts) {
 
     await got.agendarest.post('cancel', {
       json: {
-        'data.body.cardID': String(cardId)
+        'data.body.cardId': Number(cardId)
       }
     })
 
